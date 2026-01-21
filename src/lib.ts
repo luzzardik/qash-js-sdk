@@ -34,6 +34,28 @@ export type IndividualAccountHolder = BaseAccountHolder & {
     external_id: string | null;
 }
 export type AccountHolder = IndividualAccountHolder;
+export type AccountListQuery = {
+    partner?: string | string[];
+    type?: string | string[];
+    holder?: string | string[];
+    currency?: string | string[];
+}
+// Util: build query value
+function buildQueryValue (value: string | string[]) {
+    return Array.isArray(value) ? value.join(',') : value;
+}
+// Util: build query
+function buildQuery (query: Record<string, string | string[]>) {
+    if (Object.keys(query).length == 0) return "";
+    const kV : Record<string, string> = {};
+    for (let i in query) {
+        if (typeof query[i] !== "string" && !Array.isArray(query[i])) continue;
+        if (Array.isArray(query[i])) query[i] = query[i].filter(f => typeof f === "string");
+        kV[i] = buildQueryValue(query[i]);
+    }
+    const built = Object.entries(kV).map(([k, v]) => `${k}=${v}`).join('&');
+    return '?' + built;
+}
 // SDK
 export default class QashSDK {
     // Identification
@@ -86,11 +108,24 @@ class QashCBS {
 
     // Get accounts
     // TODO: Account type
-    // TODO: search query
-    getAccounts () : Promise<any[]> {
+    getAccounts (query: AccountListQuery = {}) : Promise<any[]> {
+        return new Promise(async (resolve, reject) => {
+            const builtQuery = buildQuery(query);
+            try {
+                let _q = await fetch(`${this.#sdk.environment}/v1/cbs/accounts${builtQuery}`, { headers: { Authorization: `Basic ${this.#sdk.apiKey}` } }).then(r => r.json());
+                if (_q.error || _q.errors) throw _q.errors || [_q.error];
+                return resolve(_q);
+            } catch (e) {
+                reject(Array.isArray(e) ? e : ["unexpected_issue"]);
+            }
+        });
+    }
+
+    // Get account holder
+    getAccountHolder (account_holder_id: string) : Promise<AccountHolder> {
         return new Promise(async (resolve, reject) => {
             try {
-                let _q = await fetch(`${this.#sdk.environment}/v1/cbs/accounts`, { headers: { Authorization: `Basic ${this.#sdk.apiKey}` } }).then(r => r.json());
+                let _q = await fetch(`${this.#sdk.environment}/v1/cbs/account-holder/${account_holder_id}`, { headers: { Authorization: `Basic ${this.#sdk.apiKey}` } }).then(r => r.json());
                 if (_q.error || _q.errors) throw _q.errors || [_q.error];
                 return resolve(_q);
             } catch (e) {
