@@ -1,10 +1,14 @@
 {
-  "name": "qash-sdk",
+  "name": "@dc-qash/sdk",
   "type": "module",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "SDK for Qash, a DemocracyCraft clearing house",
   "main": "dist/lib.js",
+  "types": "dist/lib.d.ts",
   "repository": "https://github.com/luzzardik/qash-js-sdk",
   "author": "Kacy Luzzardi",
-  "private": false
+  "private": false,
+  "scripts": {
+    "build": "rm -rf ./dist && tsc"
+  }
 }
