@@ -224,7 +224,7 @@ class QashCBS {
     createIndividualAccountHolder (data: IndividualAccountHolderCreationData) : Promise<AccountHolder> {
         return new Promise(async (resolve, reject) => {
             try {
-                let _q = await fetch(`${this.#sdk.environment}/v1/cbs/account-holders`, { method: "POST", body: JSON.stringify(Object.assign({ type: "individual" }, data)), headers: { Authorization: `Basic ${this.#sdk.apiKey}` } }).then(r => r.json());
+                let _q = await fetch(`${this.#sdk.environment}/v1/cbs/account-holders`, { method: "POST", body: JSON.stringify(Object.assign({ type: "individual" }, data)), headers: { Authorization: `Basic ${this.#sdk.apiKey}`, "Content-Type": "application/json" } }).then(r => r.json());
                 if (_q.error || _q.errors) throw _q.errors || [_q.error];
                 return resolve(_q);
             } catch (e) {
@@ -238,7 +238,7 @@ class QashCBS {
     createCheckingAccount (data: CheckingAccountCreationData) : Promise<CheckingAccount> {
         return new Promise(async (resolve, reject) => {
             try {
-                let _q = await fetch(`${this.#sdk.environment}/v1/cbs/accounts`, { method: "POST", body: JSON.stringify(Object.assign({ type: "checking_account" }, data)), headers: { Authorization: `Basic ${this.#sdk.apiKey}` } }).then(r => r.json());
+                let _q = await fetch(`${this.#sdk.environment}/v1/cbs/accounts`, { method: "POST", body: JSON.stringify(Object.assign({ type: "checking_account" }, data)), headers: { Authorization: `Basic ${this.#sdk.apiKey}`, "Content-Type": "application/json" } }).then(r => r.json());
                 if (_q.error || _q.errors) throw _q.errors || [_q.error];
                 return resolve(_q);
             } catch (e) {
