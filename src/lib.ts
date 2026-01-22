@@ -13,6 +13,33 @@ export type Partner = {
     revoked_at: number | null;
     logo_url: string | null;
 }
+export type CheckingAccountCreationData = {
+    account_holder: string;
+    label: string;
+    currency: string;
+    metadata?: Record<string, any> | string | null;
+}
+export type BaseAccount = {
+    _id: string;
+    type: "checking_account" | "partner_settlement";
+    responsible_partner: string;
+    label: string;
+    metadata: Record<string, any> | string | null;
+    account_holder: string;
+    account_number: string;
+    currency: string;
+    settled_balance: number;
+    allowed_overdraft: number;
+    created_at: number;
+    closed_at: number | null;
+}
+export type CheckingAccount = {
+    type: "checking_account";
+}
+export type PartnerSettlementAccount = {
+    type: "partner_settlement";
+}
+export type Account = CheckingAccount | PartnerSettlementAccount;
 export type IndividualAccountHolderCreationData = {
     name: string;
     discord_id: string | null;
@@ -25,6 +52,7 @@ export type BaseAccountHolder = {
     type: "individual" | "business" | "institution";
     responsible_partner: string;
     name: string;
+    metadata: Record<string, any> | string | null;
     created_at: number;
     updated_at: number | null;
     revoked_at: number | null;
@@ -160,8 +188,7 @@ class QashCBS {
     }
 
     // Get accounts
-    // TODO: Account type
-    getAccounts (query: AccountListQuery = {}) : Promise<any[]> {
+    getAccounts (query: AccountListQuery = {}) : Promise<Account[]> {
         return new Promise(async (resolve, reject) => {
             const builtQuery = buildQuery(query);
             try {
@@ -192,6 +219,19 @@ class QashCBS {
         return new Promise(async (resolve, reject) => {
             try {
                 let _q = await fetch(`${this.#sdk.environment}/v1/cbs/account-holders`, { method: "POST", body: JSON.stringify(Object.assign({ type: "individual" }, data)), headers: { Authorization: `Basic ${this.#sdk.apiKey}` } }).then(r => r.json());
+                if (_q.error || _q.errors) throw _q.errors || [_q.error];
+                return resolve(_q);
+            } catch (e) {
+                reject(Array.isArray(e) ? e : ["unexpected_issue"]);
+            }
+        });
+    }
+
+    // Create account - Checking
+    createCheckingAccount (data: CheckingAccountCreationData) : Promise<CheckingAccount> {
+        return new Promise(async (resolve, reject) => {
+            try {
+                let _q = await fetch(`${this.#sdk.environment}/v1/cbs/accounts`, { method: "POST", body: JSON.stringify(Object.assign({ type: "checking_account" }, data)), headers: { Authorization: `Basic ${this.#sdk.apiKey}` } }).then(r => r.json());
                 if (_q.error || _q.errors) throw _q.errors || [_q.error];
                 return resolve(_q);
             } catch (e) {
