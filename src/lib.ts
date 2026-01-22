@@ -33,10 +33,10 @@ export type BaseAccount = {
     created_at: number;
     closed_at: number | null;
 }
-export type CheckingAccount = {
+export type CheckingAccount = BaseAccount & {
     type: "checking_account";
 }
-export type PartnerSettlementAccount = {
+export type PartnerSettlementAccount = BaseAccount & {
     type: "partner_settlement";
 }
 export type Account = CheckingAccount | PartnerSettlementAccount;
