@@ -1,7 +1,7 @@
 {
   "name": "@dc-qash/sdk",
   "type": "module",
-  "version": "1.3.2",
+  "version": "1.3.3",
   "description": "SDK for Qash, a DemocracyCraft clearing house",
   "main": "dist/lib.js",
   "types": "dist/lib.d.ts",
