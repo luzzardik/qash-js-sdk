@@ -40,6 +40,21 @@ export type AccountListQuery = {
     holder?: string | string[];
     currency?: string | string[];
 }
+export type CurrencyExchangeRate = {
+    currency: string;
+    rate: number;
+}
+export type CurrencySymbol = {
+    value: string;
+    is_after: boolean;
+}
+export type Currency = {
+    _id: string;
+    code: string;
+    name: string;
+    symbol: CurrencySymbol;
+    exchange_rates: CurrencyExchangeRate[];
+}
 // Util: build query value
 function buildQueryValue (value: string | string[]) {
     return Array.isArray(value) ? value.join(',') : value;
@@ -50,7 +65,7 @@ function buildQuery (query: Record<string, string | string[]>) {
     const kV : Record<string, string> = {};
     for (let i in query) {
         if (typeof query[i] !== "string" && !Array.isArray(query[i])) continue;
-        if (Array.isArray(query[i])) query[i] = query[i].filter(f => typeof f === "string");
+        if (Array.isArray(query[i])) query[i] = (query[i] as string[]).filter((f: any) => typeof f === "string");
         kV[i] = buildQueryValue(query[i]);
     }
     const built = Object.entries(kV).map(([k, v]) => `${k}=${v}`).join('&');
@@ -65,6 +80,7 @@ export default class QashSDK {
         this.apiKey = apiKey;
         this.environment = environment;
         this.CBS = new QashCBS(this);
+        this.Datasets = new QashDatasets(this);
     }
 
     // Get authorized partner
@@ -80,8 +96,44 @@ export default class QashSDK {
         });
     }
 
-    // CBS
+    // Subsets
     public CBS;
+    public Datasets;
+}
+
+// Datasets
+class QashDatasets {
+    #sdk: QashSDK;
+
+    constructor (sdk: QashSDK) {
+        this.#sdk = sdk;
+    }
+
+    // Get currencies
+    getCurrencies () : Promise<Currency[]> {
+        return new Promise(async (resolve, reject) => {
+            try {
+                let _q = await fetch(`${this.#sdk.environment}/datasets/currencies`).then(r => r.json());
+                if (_q.error || _q.errors) throw _q.errors || [_q.error];
+                return resolve(_q);
+            } catch (e) {
+                reject(Array.isArray(e) ? e : ["unexpected_issue"]);
+            }
+        });
+    }
+
+    // Get currency
+    getCurrency (currency_id: string) : Promise<Currency> {
+        return new Promise(async (resolve, reject) => {
+            try {
+                let _q = await fetch(`${this.#sdk.environment}/datasets/currency/${currency_id}`).then(r => r.json());
+                if (_q.error || _q.errors) throw _q.errors || [_q.error];
+                return resolve(_q);
+            } catch (e) {
+                reject(Array.isArray(e) ? e : ["unexpected_issue"]);
+            }
+        });
+    }
 }
 
 // CBS
