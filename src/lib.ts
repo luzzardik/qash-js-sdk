@@ -66,7 +66,7 @@ export type AccountHolder = IndividualAccountHolder;
 export type AccountListQuery = {
     partner?: string | string[];
     type?: string | string[];
-    holder?: string | string[];
+    account_holder?: string | string[];
     currency?: string | string[];
 }
 export type CurrencyExchangeRate = {
