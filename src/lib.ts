@@ -120,6 +120,7 @@ export default class QashSDK {
                 if (_q.error || _q.errors) throw _q.errors || [_q.error];
                 return resolve(_q);
             } catch (e) {
+                if (!Array.isArray(e)) console.error(e);
                 reject(Array.isArray(e) ? e : ["unexpected_issue"]);
             }
         });
@@ -146,6 +147,7 @@ class QashDatasets {
                 if (_q.error || _q.errors) throw _q.errors || [_q.error];
                 return resolve(_q);
             } catch (e) {
+                if (!Array.isArray(e)) console.error(e);
                 reject(Array.isArray(e) ? e : ["unexpected_issue"]);
             }
         });
@@ -159,6 +161,7 @@ class QashDatasets {
                 if (_q.error || _q.errors) throw _q.errors || [_q.error];
                 return resolve(_q);
             } catch (e) {
+                if (!Array.isArray(e)) console.error(e);
                 reject(Array.isArray(e) ? e : ["unexpected_issue"]);
             }
         });
@@ -182,6 +185,7 @@ class QashCBS {
                 if (_q.error || _q.errors) throw _q.errors || [_q.error];
                 return resolve(_q);
             } catch (e) {
+                if (!Array.isArray(e)) console.error(e);
                 reject(Array.isArray(e) ? e : ["unexpected_issue"]);
             }
         });
@@ -196,6 +200,7 @@ class QashCBS {
                 if (_q.error || _q.errors) throw _q.errors || [_q.error];
                 return resolve(_q);
             } catch (e) {
+                if (!Array.isArray(e)) console.error(e);
                 reject(Array.isArray(e) ? e : ["unexpected_issue"]);
             }
         });
@@ -209,6 +214,7 @@ class QashCBS {
                 if (_q.error || _q.errors) throw _q.errors || [_q.error];
                 return resolve(_q);
             } catch (e) {
+                if (!Array.isArray(e)) console.error(e);
                 reject(Array.isArray(e) ? e : ["unexpected_issue"]);
             }
         });
@@ -222,6 +228,7 @@ class QashCBS {
                 if (_q.error || _q.errors) throw _q.errors || [_q.error];
                 return resolve(_q);
             } catch (e) {
+                if (!Array.isArray(e)) console.error(e);
                 reject(Array.isArray(e) ? e : ["unexpected_issue"]);
             }
         });
@@ -235,6 +242,7 @@ class QashCBS {
                 if (_q.error || _q.errors) throw _q.errors || [_q.error];
                 return resolve(_q);
             } catch (e) {
+                if (!Array.isArray(e)) console.error(e);
                 reject(Array.isArray(e) ? e : ["unexpected_issue"]);
             }
         });
