@@ -18,7 +18,7 @@ export type IndividualAccountHolderCreationData = {
     discord_id: string | null;
     minecraft_id: string | null;
     external_id: string | null;
-    metadata: Record<string, any> | string | null;
+    metadata?: Record<string, any> | string | null;
 }
 export type BaseAccountHolder = {
     _id: string;
